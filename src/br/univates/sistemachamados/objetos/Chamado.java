@@ -1,5 +1,7 @@
 package br.univates.sistemachamados.objetos;
 
+import java.util.Date;
+
 public class Chamado {
     private int id;
     private Usuario usuario;
