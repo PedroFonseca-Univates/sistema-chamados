@@ -1,4 +1,4 @@
-package br.univates.sistemachamados.persistencia;
+package br.univates.sistemachamados.objetos;
 
 public class Usuario {
     private int id;
