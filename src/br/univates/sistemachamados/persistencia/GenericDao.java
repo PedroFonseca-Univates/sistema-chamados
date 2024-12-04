@@ -10,4 +10,3 @@ public interface GenericDao<T> {
     T buscarPorId(int id) throws Exception;
     List<T> buscarTodos() throws Exception;
 }
-s
