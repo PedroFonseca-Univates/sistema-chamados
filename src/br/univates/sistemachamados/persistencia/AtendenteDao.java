@@ -1,121 +1,93 @@
 package br.univates.sistemachamados.persistencia;
 
-public class AtendenteDao extends BaseRepository<Attendant> {
+import br.univates.sistemachamados.objetos.Atendente;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+public class AtendenteDao implements GenericDao<Atendente> {
+    private Connection conexao;
+
+    public AtendenteDao(Connection conexao) {
+        this.conexao = conexao;
+    }
+
     @Override
-    public void create(Attendant attendant) throws SQLException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        try {
-            conn = getConnection();
-            String sql = "INSERT INTO attendants (name, email, registration_number, hire_date, active) VALUES (?, ?, ?, ?, ?)";
-            stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
-            stmt.setString(1, attendant.getName());
-            stmt.setString(2, attendant.getEmail());
-            stmt.setString(3, attendant.getRegistrationNumber());
-            stmt.setDate(4, Date.valueOf(attendant.getHireDate()));
-            stmt.setBoolean(5, attendant.isActive());
-
+    public void inserir(Atendente atendente) throws Exception {
+        String sql = "INSERT INTO atendentes (nome, email, setor) VALUES (?, ?, ?)";
+        try (PreparedStatement stmt = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, atendente.getNome());
+            stmt.setString(2, atendente.getEmail());
+            stmt.setString(3, atendente.getSetor());
             stmt.executeUpdate();
 
-            ResultSet rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                attendant.setId(rs.getInt(1));
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    atendente.setId(rs.getInt(1));
+                }
             }
-        } finally {
-            closeResources(conn, stmt, null);
         }
     }
 
     @Override
-    public void update(Attendant attendant) throws SQLException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        try {
-            conn = getConnection();
-            String sql = "UPDATE attendants SET name = ?, email = ?, registration_number = ?, active = ? WHERE id = ?";
-            stmt = conn.prepareStatement(sql);
-
-            stmt.setString(1, attendant.getName());
-            stmt.setString(2, attendant.getEmail());
-            stmt.setString(3, attendant.getRegistrationNumber());
-            stmt.setBoolean(4, attendant.isActive());
-            stmt.setInt(5, attendant.getId());
-
+    public void atualizar(Atendente atendente) throws Exception {
+        String sql = "UPDATE atendentes SET nome = ?, email = ?, setor = ? WHERE id = ?";
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setString(1, atendente.getNome());
+            stmt.setString(2, atendente.getEmail());
+            stmt.setString(3, atendente.getSetor());
+            stmt.setInt(4, atendente.getId());
             stmt.executeUpdate();
-        } finally {
-            closeResources(conn, stmt, null);
         }
     }
 
     @Override
-    public void delete(int id) throws SQLException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        try {
-            conn = getConnection();
-            String sql = "DELETE FROM attendants WHERE id = ?";
-            stmt = conn.prepareStatement(sql);
+    public void excluir(int id) throws Exception {
+        String sql = "DELETE FROM atendentes WHERE id = ?";
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
-        } finally {
-            closeResources(conn, stmt, null);
         }
     }
 
     @Override
-    public Attendant findById(int id) throws SQLException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        Attendant attendant = null;
-        try {
-            conn = getConnection();
-            String sql = "SELECT * FROM attendants WHERE id = ?";
-            stmt = conn.prepareStatement(sql);
+    public Atendente buscarPorId(int id) throws Exception {
+        Atendente atendente = null;
+        String sql = "SELECT * FROM atendentes WHERE id = ?";
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
             stmt.setInt(1, id);
-            rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                attendant = new Attendant();
-                attendant.setId(rs.getInt("id"));
-                attendant.setName(rs.getString("name"));
-                attendant.setEmail(rs.getString("email"));
-                attendant.setRegistrationNumber(rs.getString("registration_number"));
-                attendant.setHireDate(rs.getDate("hire_date").toLocalDate());
-                attendant.setActive(rs.getBoolean("active"));
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    atendente = new Atendente();
+                    atendente.setId(rs.getInt("id"));
+                    atendente.setNome(rs.getString("nome"));
+                    atendente.setEmail(rs.getString("email"));
+                    atendente.setSetor(rs.getString("setor"));
+                }
             }
-        } finally {
-            closeResources(conn, stmt, rs);
         }
-        return attendant;
+        return atendente;
     }
 
     @Override
-    public List<Attendant> findAll() throws SQLException {
-        List<Attendant> attendants = new ArrayList<>();
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            conn = getConnection();
-            String sql = "SELECT * FROM attendants";
-            stmt = conn.prepareStatement(sql);
-            rs = stmt.executeQuery();
-
+    public List<Atendente> buscarTodos() throws Exception {
+        List<Atendente> atendentes = new ArrayList<>();
+        String sql = "SELECT * FROM atendentes";
+        try (PreparedStatement stmt = conexao.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                Attendant attendant = new Attendant();
-                attendant.setId(rs.getInt("id"));
-                attendant.setName(rs.getString("name"));
-                attendant.setEmail(rs.getString("email"));
-                attendant.setRegistrationNumber(rs.getString("registration_number"));
-                attendant.setHireDate(rs.getDate("hire_date").toLocalDate());
-                attendant.setActive(rs.getBoolean("active"));
-                attendants.add(attendant);
+                Atendente atendente = new Atendente();
+                atendente.setId(rs.getInt("id"));
+                atendente.setNome(rs.getString("nome"));
+                atendente.setEmail(rs.getString("email"));
+                atendente.setSetor(rs.getString("setor"));
+                atendentes.add(atendente);
             }
-        } finally {
-            closeResources(conn, stmt, rs);
         }
-        return attendants;
+        return atendentes;
     }
 }
