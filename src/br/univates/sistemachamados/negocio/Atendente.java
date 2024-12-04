@@ -1,20 +1,20 @@
-package br.univates.sistemachamados.objetos;
+package br.univates.sistemachamados.negocio;
 
-public class Usuario {
+public class Atendente {
     private int id;
     private String nome;
     private String email;
-    private String telefone;
+    private String setor;
 
     // Construtor padrão
-    public Usuario() {}
+    public Atendente() {}
 
     // Construtor com parâmetros
-    public Usuario(int id, String nome, String email, String telefone) {
+    public Atendente(int id, String nome, String email, String setor) {
         this.id = id;
         this.nome = nome;
         this.email = email;
-        this.telefone = telefone;
+        this.setor = setor;
     }
 
     // Getters e setters
@@ -24,6 +24,6 @@ public class Usuario {
     public void setNome(String nome) { this.nome = nome; }
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
-    public String getTelefone() { return telefone; }
-    public void setTelefone(String telefone) { this.telefone = telefone; }
+    public String getSetor() { return setor; }
+    public void setSetor(String setor) { this.setor = setor; }
 }

@@ -1,6 +1,6 @@
 package br.univates.sistemachamados.persistencia;
 
-import br.univates.sistemachamados.objetos.Usuario;
+import br.univates.sistemachamados.negocio.Usuario;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

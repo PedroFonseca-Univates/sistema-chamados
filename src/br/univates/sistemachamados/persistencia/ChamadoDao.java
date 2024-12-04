@@ -1,6 +1,6 @@
 package br.univates.sistemachamados.persistencia;
 
-import br.univates.sistemachamados.objetos.Chamado;
+import br.univates.sistemachamados.negocio.Chamado;
 
 import java.sql.*;
 

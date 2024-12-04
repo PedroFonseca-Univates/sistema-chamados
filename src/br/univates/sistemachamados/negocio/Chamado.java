@@ -1,4 +1,4 @@
-package br.univates.sistemachamados.objetos;
+package br.univates.sistemachamados.negocio;
 
 import java.util.Date;
 

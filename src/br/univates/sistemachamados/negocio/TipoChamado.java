@@ -1,4 +1,4 @@
-package br.univates.sistemachamados.objetos;
+package br.univates.sistemachamados.negocio;
 
 public class TipoChamado {
     private int id;
