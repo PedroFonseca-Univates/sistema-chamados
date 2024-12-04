@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class ConexaoBancoDados {
-    private static final String DATABASE_PATH = "helpdesk.db";
+    private static final String DATABASE_PATH = "chamados.db";
     private static Connection conexao = null;
 
     // Método para obter conexão com o banco de dados SQLite
