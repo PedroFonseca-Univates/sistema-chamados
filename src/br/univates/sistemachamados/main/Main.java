@@ -19,7 +19,11 @@ public class Main {
         }
 
         SwingUtilities.invokeLater(() -> {
-            new TelaPrincipal().setVisible(true);
+            try {
+                new TelaPrincipal(ConexaoBancoDados.obterConexao()).setVisible(true);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 

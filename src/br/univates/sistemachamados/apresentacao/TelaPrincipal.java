@@ -2,63 +2,101 @@ package br.univates.sistemachamados.apresentacao;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
 
 public class TelaPrincipal extends JFrame {
-    public TelaPrincipal() {
-        setTitle("Sistema de Chamados - Help Desk");
+    private Connection conexao;
+
+    public TelaPrincipal(Connection conexao) {
+        this.conexao = conexao;
+
+        // Configurações básicas da janela
+        setTitle("Sistema de Gerenciamento de Chamados");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Create main menu bar
+        // Criar barra de menu
         JMenuBar menuBar = new JMenuBar();
 
         // Menus
-        JMenu cadastrosMenu = new JMenu("Cadastros");
-        JMenu chamadosMenu = new JMenu("Chamados");
+        JMenu menuCadastros = new JMenu("Cadastros");
+        JMenu menuChamados = new JMenu("Chamados");
 
-        // Cadastros Menu Items
-        JMenuItem usuariosItem = new JMenuItem("Usuários");
-        //TODO: usuariosItem.addActionListener(e -> new UsuarioFrame().setVisible(true));
-        JMenuItem atendentesItem = new JMenuItem("Atendentes");
-        //TODO: atendentesItem.addActionListener(e -> new AtendenteFrame().setVisible(true));
-        JMenuItem tiposChamadoItem = new JMenuItem("Tipos de Chamado");
-        //TODO: tiposChamadoItem.addActionListener(e -> new TipoChamadoFrame().setVisible(true));
+        // Itens de menu Cadastros
+        JMenuItem itemCadastroUsuario = new JMenuItem("Usuários");
+        itemCadastroUsuario.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new TelaCadastroUsuario(conexao).setVisible(true);
+            }
+        });
 
-        // Chamados Menu Items
-        JMenuItem abrirChamadoItem = new JMenuItem("Abrir Chamado");
-        //TODO: abrirChamadoItem.addActionListener(e -> new ChamadoFrame(null).setVisible(true));
-        JMenuItem consultarChamadosItem = new JMenuItem("Consultar Chamados");
-        //TODO: consultarChamadosItem.addActionListener(e -> new ConsultaChamadosFrame().setVisible(true));
+        JMenuItem itemCadastroAtendente = new JMenuItem("Atendentes");
+        itemCadastroAtendente.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new TelaCadastroAtendente(conexao).setVisible(true);
+            }
+        });
 
-        // Add items to menus
-        cadastrosMenu.add(usuariosItem);
-        cadastrosMenu.add(atendentesItem);
-        cadastrosMenu.add(tiposChamadoItem);
+        JMenuItem itemCadastroTipoChamado = new JMenuItem("Tipos de Chamado");
+        itemCadastroTipoChamado.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new TelaCadastroTipoChamado(conexao).setVisible(true);
+            }
+        });
 
-        chamadosMenu.add(abrirChamadoItem);
-        chamadosMenu.add(consultarChamadosItem);
+        // Itens de menu Chamados
+        JMenuItem itemNovoChamado = new JMenuItem("Novo Chamado");
+        itemNovoChamado.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new TelaCadastroChamado(conexao).setVisible(true);
+            }
+        });
 
-        // Add menus to menu bar
-        menuBar.add(cadastrosMenu);
-        menuBar.add(chamadosMenu);
+        JMenuItem itemConsultaChamados = new JMenuItem("Consultar Chamados");
+        itemConsultaChamados.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new TelaConsultaChamados(conexao).setVisible(true);
+            }
+        });
 
+        JMenuItem itemResolverChamados = new JMenuItem("Resolver Chamados");
+        itemResolverChamados.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new TelaResolverChamado(conexao).setVisible(true);
+            }
+        });
+
+        // Adicionar itens aos menus
+        menuCadastros.add(itemCadastroUsuario);
+        menuCadastros.add(itemCadastroAtendente);
+        menuCadastros.add(itemCadastroTipoChamado);
+
+        menuChamados.add(itemNovoChamado);
+        menuChamados.add(itemConsultaChamados);
+        menuChamados.add(itemResolverChamados);
+
+        // Adicionar menus à barra de menu
+        menuBar.add(menuCadastros);
+        menuBar.add(menuChamados);
+
+        // Definir barra de menu
         setJMenuBar(menuBar);
 
-        // Optional: Add a welcome panel
-        JPanel welcomePanel = new JPanel();
-        JLabel welcomeLabel = new JLabel("Bem-vindo ao Sistema de Chamados");
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        welcomePanel.add(welcomeLabel);
+        // Painel de boas-vindas
+        JPanel painelPrincipal = new JPanel(new BorderLayout());
+        JLabel labelBoasVindas = new JLabel("Bem-vindo ao Sistema de Gerenciamento de Chamados", SwingConstants.CENTER);
+        labelBoasVindas.setFont(new Font("Arial", Font.BOLD, 20));
+        painelPrincipal.add(labelBoasVindas, BorderLayout.CENTER);
 
-        add(welcomePanel);
-    }
-
-    public static void main(String[] args) {
-
-        // Run the application
-        SwingUtilities.invokeLater(() -> {
-            new TelaPrincipal().setVisible(true);
-        });
+        add(painelPrincipal);
     }
 }
